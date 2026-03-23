@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>감자일기 🥔</title>
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+    font-weight: 300;
+  }
+  @font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: 700;
+  }
+</style>
+<style>
+  :root {
+    --potato-brown: #C8926A;
+    --potato-dark: #A0714F;
+    --potato-light: #E8C9A8;
+    --potato-cream: #FDF6EE;
+    --potato-warm: #F5ECD8;
+    --bg: #FDF6EE;
+    --card: #FFFAF4;
+    --text: #4A3728;
+    --text-sub: #8B6E5A;
+    --border: #E8D5C0;
+    --accent: #D4845A;
+    --green: #7BAF7A;
+    --shadow: 0 4px 20px rgba(160,113,79,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'GmarketSans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(160deg, #F5E6D0 0%, #EDD5B0 100%);
+    padding: 24px 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .header-date {
+    font-size: 12px;
+    color: var(--text-sub);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--potato-dark);
+    letter-spacing: -0.02em;
+  }
+
+  /* Potato Character */
+  .potato-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px 12px;
+    background: linear-gradient(180deg, #EDD5B0 0%, var(--potato-cream) 100%);
+  }
+
+  .potato-wrap {
+    position: relative;
+    width: 160px;
+    height: 150px;
+  }
+
+  .potato-svg {
+    width: 160px;
+    height: 150px;
+    filter: drop-shadow(0 6px 16px rgba(160,113,79,0.25));
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .potato-svg:hover { transform: scale(1.06) rotate(-2deg); }
+
+  .potato-bubble {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 18px 18px 18px 4px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 260px;
+    text-align: center;
+    margin-top: 12px;
+    box-shadow: 0 2px 10px rgba(160,113,79,0.1);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .typing-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--potato-brown);
+    margin: 0 2px;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  /* Emotion Picker */
+  .section {
+    padding: 16px 20px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .emotions {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .emotion-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 4px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 10px;
+    color: var(--text-sub);
+    font-family: 'GmarketSans', sans-serif;
+  }
+
+  .emotion-btn .emoji { font-size: 22px; line-height: 1; }
+
+  .emotion-btn:hover {
+    border-color: var(--potato-brown);
+    background: var(--potato-warm);
+    transform: translateY(-2px);
+  }
+
+  .emotion-btn.active {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #FDF0E8, #F8E0CC);
+    color: var(--accent);
+    font-weight: 700;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(212,132,90,0.2);
+  }
+
+  /* Diary Input */
+  .diary-area {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text);
+    background: white;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 120px;
+  }
+
+  .diary-area:focus { border-color: var(--potato-brown); }
+  .diary-area::placeholder { color: #C4A98A; }
+
+  /* AI Response Card */
+  .ai-card {
+    margin: 0 20px 16px;
+    background: linear-gradient(135deg, #FFF8F0, #FDECD8);
+    border: 1px solid #EDD5B0;
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: none;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .ai-card.show { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .ai-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .ai-avatar {
+    width: 28px; height: 28px;
+    background: var(--potato-brown);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .ai-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--potato-dark);
+  }
+
+  .ai-message {
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Save Button */
+  .save-btn {
+    margin: 0 20px 12px;
+    width: calc(100% - 40px);
+    padding: 15px;
+    background: linear-gradient(135deg, var(--potato-brown), var(--accent));
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 15px;
+    font-family: 'GmarketSans', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(200,146,106,0.35);
+    letter-spacing: 0.02em;
+  }
+
+  .save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,146,106,0.45); }
+  .save-btn:active { transform: translateY(0); }
+  .save-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* Past Entries */
+  .entries-list { padding: 0 20px 20px; }
+
+  .entry-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.2s;
+  }
+  .entry-card:hover { box-shadow: var(--shadow); }
+
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .entry-emotion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .entry-time { font-size: 11px; color: var(--text-sub); }
+
+  .entry-text {
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .entry-ai {
+    background: var(--potato-warm);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-sub);
+    border-left: 3px solid var(--potato-brown);
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 10px 0 14px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 10px;
+    color: var(--text-sub);
+    transition: color 0.2s;
+    padding: 4px 0;
+  }
+
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+
+  /* Views */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 16px 20px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-emoji { font-size: 28px; margin-bottom: 6px; }
+  .stat-count { font-size: 24px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-sub);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .empty-emoji { font-size: 48px; margin-bottom: 12px; }
+
+  .char-count {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-date" id="today-date"></div>
+    <div class="header-title">감자일기</div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="switchView('write')" id="nav-write">
+      <span class="nav-icon">📝</span>오늘기록
+    </button>
+    <button class="nav-btn" onclick="switchView('history')" id="nav-history">
+      <span class="nav-icon">📅</span>지난일기
+    </button>
+    <button class="nav-btn" onclick="switchView('stats')" id="nav-stats">
+      <span class="nav-icon">📊</span>감정통계
+    </button>
+  </div>
+
+  <!-- Write View -->
+  <div class="view active" id="view-write">
+
+    <!-- Potato Character -->
+    <div class="potato-section">
+      <div class="potato-wrap">
+        <svg class="potato-svg" viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg" id="potato-char">
+          <!-- Body -->
+          <path d="M 78 14 C 52 10, 18 28, 12 58 C 6 84, 18 118, 46 132 C 66 142, 100 140, 122 126 C 146 110, 154 84, 148 60 C 142 36, 116 10, 92 12 Z" fill="#C8926A" stroke="#2A1508" stroke-width="4" stroke-linejoin="round"/>
+          <!-- 어두운 반점들 -->
+          <ellipse cx="38" cy="62" rx="8" ry="6" fill="#9B6845" opacity="0.65"/>
+          <ellipse cx="98" cy="32" rx="7" ry="5" fill="#9B6845" opacity="0.55"/>
+          <ellipse cx="128" cy="58" rx="7.5" ry="5.5" fill="#9B6845" opacity="0.6"/>
+          <ellipse cx="30" cy="98" rx="6" ry="4.5" fill="#9B6845" opacity="0.55"/>
+          <ellipse cx="110" cy="112" rx="7" ry="5" fill="#9B6845" opacity="0.5"/>
+          <!-- 밝은 반점들 -->
+          <ellipse cx="62" cy="118" rx="5.5" ry="4" fill="#DDB990" opacity="0.7"/>
+          <ellipse cx="118" cy="88" rx="6" ry="4" fill="#DDB990" opacity="0.6"/>
+          <ellipse cx="52" cy="40" rx="5" ry="3.5" fill="#DDB990" opacity="0.65"/>
+          <ellipse cx="140" cy="100" rx="5" ry="3.5" fill="#9B6845" opacity="0.45"/>
+          <!-- 눈 흰자 -->
+          <ellipse cx="68" cy="78" rx="16" ry="17" fill="white" stroke="#2A1508" stroke-width="2.5"/>
+          <ellipse cx="102" cy="78" rx="16" ry="17" fill="white" stroke="#2A1508" stroke-width="2.5"/>
+          <!-- 눈동자 -->
+          <circle cx="70" cy="80" r="8" fill="#140800" id="eye-l"/>
+          <circle cx="104" cy="80" r="8" fill="#140800" id="eye-r"/>
+          <!-- 눈 하이라이트 -->
+          <circle cx="73" cy="76" r="3" fill="white"/>
+          <circle cx="107" cy="76" r="3" fill="white"/>
+          <!-- 입 -->
+          <path id="potato-mouth" d="M 76 102 Q 85 109 94 102" stroke="#2A1508" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- 볼터치 -->
+          <ellipse cx="50" cy="94" rx="10" ry="6.5" fill="#E8957A" opacity="0.35" id="cheek-l"/>
+          <ellipse cx="120" cy="94" rx="10" ry="6.5" fill="#E8957A" opacity="0.35" id="cheek-r"/>
+        </svg>
+      </div>
+
+      <div class="potato-bubble" id="potato-bubble">
+        오늘 하루 어땠어? 🥔
+      </div>
+    </div>
+
+    <!-- Emotion Picker -->
+    <div class="section">
+      <div class="section-label">오늘의 감정</div>
+      <div class="emotions" id="emotions">
+        <button class="emotion-btn" onclick="selectEmotion('신남','🎉','excited')" data-id="excited">
+          <span class="emoji">🎉</span>신남
+        </button>
+        <button class="emotion-btn" onclick="selectEmotion('행복','😊','happy')" data-id="happy">
+          <span class="emoji">😊</span>행복
+        </button>
+        <button class="emotion-btn" onclick="selectEmotion('평온','😌','calm')" data-id="calm">
+          <span class="emoji">😌</span>평온
+        </button>
+        <button class="emotion-btn" onclick="selectEmotion('슬픔','😢','sad')" data-id="sad">
+          <span class="emoji">😢</span>슬픔
+        </button>
+        <button class="emotion-btn" onclick="selectEmotion('힘듦','😔','tired')" data-id="tired">
+          <span class="emoji">😔</span>힘듦
+        </button>
+      </div>
+    </div>
+
+    <!-- Diary Text -->
+    <div class="section" style="padding-top:0">
+      <div class="section-label">오늘 일기</div>
+      <textarea class="diary-area" id="diary-text" placeholder="오늘 있었던 일, 느꼈던 감정을 자유롭게 써봐요 ✍️" rows="5" maxlength="500" oninput="updateCharCount()"></textarea>
+      <div class="char-count"><span id="char-count">0</span>/500</div>
+    </div>
+
+    <!-- AI Response -->
+    <div class="ai-card" id="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-avatar">🥔</div>
+        <div class="ai-name">감자의 한마디</div>
+      </div>
+      <div class="ai-message" id="ai-message"></div>
+    </div>
+
+    <!-- Save Button -->
+    <button class="save-btn" id="save-btn" onclick="saveDiary()">
+      감자에게 오늘 마음 전하기 🥔
+    </button>
+
+  </div>
+
+  <!-- History View -->
+  <div class="view" id="view-history">
+    <div class="section">
+      <div class="section-label" style="padding-top:4px">지난 일기</div>
+    </div>
+    <div class="entries-list" id="entries-list">
+      <div class="empty-state">
+        <div class="empty-emoji">🥔</div>
+        아직 기록된 일기가 없어요.<br>오늘의 감정을 처음 기록해봐요!
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats View -->
+  <div class="view" id="view-stats">
+    <div class="section">
+      <div class="section-label" style="padding-top:4px">감정 통계</div>
+    </div>
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card" style="grid-column:1/-1">
+        <div class="empty-state" style="padding:20px">
+          <div class="empty-emoji">📊</div>
+          일기를 기록하면<br>감정 통계를 볼 수 있어요!
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ANTHROPIC_API_URL = "https://gamja-diary.won3942.workers.dev";
+
+let selectedEmotion = null;
+let entries = JSON.parse(localStorage.getItem('gamja-entries') || '[]');
+
+const potatoExpressions = {
+  excited:  { mouth: "M 72 99 Q 85 114 98 99", cheeks: 0.75, eyeOffY: -2 },
+  happy:    { mouth: "M 74 100 Q 85 112 96 100", cheeks: 0.6, eyeOffY: -1 },
+  calm:     { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.3, eyeOffY: 0 },
+  sad:      { mouth: "M 74 108 Q 85 100 96 108", cheeks: 0.08, eyeOffY: 3 },
+  tired:    { mouth: "M 76 107 Q 85 102 94 107", cheeks: 0.05, eyeOffY: 4 },
+  default:  { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.35, eyeOffY: 0 }
+};
+
+const potatoBubbles = {
+  excited:  "두근두근! 신나는 하루였구나 🎉 나도 같이 신나!",
+  happy:    "우와, 오늘 좋은 일이 있었구나! 나도 행복해 😊",
+  calm:     "포근한 하루였군요 😌 그런 날도 정말 소중해요",
+  sad:      "속상한 일이 있었구나... 곁에 있을게 💛",
+  tired:    "오늘 정말 수고했어요. 많이 지쳤겠다 😔",
+  default:  "오늘 하루 어땠어?"
+};
+
+function updateDate() {
+  const now = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  document.getElementById('today-date').textContent =
+    `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 ${days[now.getDay()]}요일`;
+}
+
+function updateCharCount() {
+  const text = document.getElementById('diary-text').value;
+  document.getElementById('char-count').textContent = text.length;
+}
+
+function selectEmotion(name, emoji, id) {
+  selectedEmotion = { name, emoji, id };
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-id="${id}"]`).classList.add('active');
+  updatePotatoExpression(id);
+  document.getElementById('potato-bubble').textContent = potatoBubbles[id];
+}
+
+function updatePotatoExpression(id) {
+  const expr = potatoExpressions[id] || potatoExpressions.default;
+  document.getElementById('potato-mouth').setAttribute('d', expr.mouth);
+  const cheekL = document.getElementById('cheek-l');
+  const cheekR = document.getElementById('cheek-r');
+  cheekL.setAttribute('opacity', expr.cheeks);
+  cheekR.setAttribute('opacity', expr.cheeks);
+  const eyeL = document.getElementById('eye-l');
+  const eyeR = document.getElementById('eye-r');
+  const baseL = { cx: 70, cy: 80 };
+  const baseR = { cx: 104, cy: 80 };
+  eyeL.setAttribute('cy', baseL.cy + (expr.eyeOffY || 0));
+  eyeR.setAttribute('cy', baseR.cy + (expr.eyeOffY || 0));
+}
+
+async function saveDiary() {
+  const text = document.getElementById('diary-text').value.trim();
+  if (!selectedEmotion) {
+    document.getElementById('potato-bubble').textContent = "감정을 먼저 선택해줘! 🥔";
+    return;
+  }
+  if (!text) {
+    document.getElementById('potato-bubble').textContent = "오늘 하루를 조금만 써줘봐 ✍️";
+    return;
+  }
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '감자가 읽는 중... 🥔';
+
+  const bubble = document.getElementById('potato-bubble');
+  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+  const aiCard = document.getElementById('ai-card');
+  aiCard.classList.remove('show');
+
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `당신은 '감자'라는 귀여운 감자 캐릭터예요. 사용자의 감정 일기를 읽고 따뜻하게 공감하고 위로해주는 역할을 합니다.
+
+규칙:
+- 2-3문장으로 짧고 따뜻하게 답해주세요
+- 감자답게 귀엽고 포근한 말투를 사용해요
+- 사용자의 감정을 있는 그대로 인정해주세요
+- 억지로 긍정적으로 만들려 하지 마세요
+- 끝에 감자 관련 따뜻한 비유를 살짝 넣어도 좋아요
+- 이모지를 1-2개만 자연스럽게 사용해요`,
+        messages: [{
+          role: 'user',
+          content: `오늘의 감정: ${selectedEmotion.emoji} ${selectedEmotion.name}\n\n일기 내용: ${text}`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const aiText = data.content?.map(c => c.text || '').join('') || '오늘 하루도 수고했어요 🥔';
+
+    document.getElementById('ai-message').textContent = aiText;
+    aiCard.classList.add('show');
+    bubble.textContent = "다 읽었어요. 오늘도 잘 버텼어 🥔";
+
+    const entry = {
+      id: Date.now(),
+      date: new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      emotion: selectedEmotion,
+      text,
+      aiResponse: aiText
+    };
+    entries.unshift(entry);
+    if (entries.length > 50) entries = entries.slice(0, 50);
+    localStorage.setItem('gamja-entries', JSON.stringify(entries));
+
+    btn.textContent = '저장됐어요 ✓';
+    setTimeout(() => {
+      btn.textContent = '감자에게 오늘 마음 전하기 🥔';
+      btn.disabled = false;
+    }, 2000);
+
+    renderHistory();
+    renderStats();
+
+  } catch (err) {
+    bubble.textContent = "앗, 연결이 안 됐어... 다시 시도해봐요 😔";
+    btn.textContent = '감자에게 오늘 마음 전하기 🥔';
+    btn.disabled = false;
+  }
+}
+
+function renderHistory() {
+  const list = document.getElementById('entries-list');
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-emoji">🥔</div>아직 기록된 일기가 없어요.<br>오늘의 감정을 처음 기록해봐요!</div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="entry-card">
+      <div class="entry-top">
+        <div class="entry-emotion">${e.emotion.emoji} ${e.emotion.name}</div>
+        <div class="entry-time">${e.date}</div>
+      </div>
+      <div class="entry-text">${e.text}</div>
+      ${e.aiResponse ? `<div class="entry-ai">🥔 ${e.aiResponse}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderStats() {
+  if (!entries.length) return;
+  const counts = {};
+  entries.forEach(e => {
+    const key = e.emotion.name;
+    if (!counts[key]) counts[key] = { emoji: e.emotion.emoji, count: 0 };
+    counts[key].count++;
+  });
+  const sorted = Object.entries(counts).sort((a,b) => b[1].count - a[1].count);
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = `
+    <div class="stat-card" style="grid-column:1/-1; display:flex; align-items:center; gap:12px; padding:16px">
+      <div style="font-size:36px">${sorted[0][1].emoji}</div>
+      <div>
+        <div style="font-size:12px; color:var(--text-sub); margin-bottom:2px">가장 많이 느낀 감정</div>
+        <div style="font-size:18px; font-weight:700; color:var(--accent)">${sorted[0][0]}</div>
+        <div style="font-size:11px; color:var(--text-sub)">총 ${entries.length}개의 일기</div>
+      </div>
+    </div>
+    ${sorted.map(([name, data]) => `
+      <div class="stat-card">
+        <div class="stat-emoji">${data.emoji}</div>
+        <div class="stat-count">${data.count}</div>
+        <div class="stat-label">${name}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  document.getElementById(`nav-${view}`).classList.add('active');
+}
+
+updateDate();
+renderHistory();
+renderStats();
+</script>
+</body>
+</html>
