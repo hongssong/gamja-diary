@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>감자일기 🥔</title>
+<title>감자일기 </title>
 <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff" rel="stylesheet">
 <style>
   @font-face {
@@ -466,7 +466,7 @@
       </div>
 
       <div class="potato-bubble" id="potato-bubble">
-        오늘 하루 어땠어? 🥔
+        오늘 하루 어땠어?
       </div>
     </div>
 
@@ -503,6 +503,7 @@
     <div class="ai-card" id="ai-card">
       <div class="ai-card-header">
         <div class="ai-avatar">🥔</div>
+        
         <div class="ai-name">감자의 한마디</div>
       </div>
       <div class="ai-message" id="ai-message"></div>
@@ -510,7 +511,7 @@
 
     <!-- Save Button -->
     <button class="save-btn" id="save-btn" onclick="saveDiary()">
-      감자에게 오늘 마음 전하기 🥔
+      감자에게 오늘 마음 전하기
     </button>
 
   </div>
@@ -522,7 +523,7 @@
     </div>
     <div class="entries-list" id="entries-list">
       <div class="empty-state">
-        <div class="empty-emoji">🥔</div>
+        <div class="empty-emoji"></div>
         아직 기록된 일기가 없어요.<br>오늘의 감정을 처음 기록해봐요!
       </div>
     </div>
@@ -551,14 +552,7 @@ const ANTHROPIC_API_URL = "https://gamja-diary.won3942.workers.dev";
 let selectedEmotion = null;
 let entries = JSON.parse(localStorage.getItem('gamja-entries') || '[]');
 
-const potatoExpressions = {
-  excited:  { mouth: "M 72 99 Q 85 114 98 99", cheeks: 0.75, eyeOffY: -2 },
-  happy:    { mouth: "M 74 100 Q 85 112 96 100", cheeks: 0.6, eyeOffY: -1 },
-  calm:     { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.3, eyeOffY: 0 },
-  sad:      { mouth: "M 74 108 Q 85 100 96 108", cheeks: 0.08, eyeOffY: 3 },
-  tired:    { mouth: "M 76 107 Q 85 102 94 107", cheeks: 0.05, eyeOffY: 4 },
-  default:  { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.35, eyeOffY: 0 }
-};
+
 
 const potatoBubbles = {
   excited:  "두근두근! 신나는 하루였구나 🎉 나도 같이 신나!",
@@ -589,6 +583,15 @@ function selectEmotion(name, emoji, id) {
   document.getElementById('potato-bubble').textContent = potatoBubbles[id];
 }
 
+const potatoExpressions = {
+  excited:  { mouth: "M 72 99 Q 85 114 98 99", cheeks: 0.75, eyeOffY: -2 },
+  happy:    { mouth: "M 74 100 Q 85 112 96 100", cheeks: 0.6, eyeOffY: -1 },
+  calm:     { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.3, eyeOffY: 0 },
+  sad:      { mouth: "M 74 108 Q 85 100 96 108", cheeks: 0.08, eyeOffY: 3 },
+  tired:    { mouth: "M 76 107 Q 85 102 94 107", cheeks: 0.05, eyeOffY: 4 },
+  default:  { mouth: "M 76 102 Q 85 109 94 102", cheeks: 0.35, eyeOffY: 0 }
+};
+
 function updatePotatoExpression(id) {
   const expr = potatoExpressions[id] || potatoExpressions.default;
   document.getElementById('potato-mouth').setAttribute('d', expr.mouth);
@@ -607,7 +610,7 @@ function updatePotatoExpression(id) {
 async function saveDiary() {
   const text = document.getElementById('diary-text').value.trim();
   if (!selectedEmotion) {
-    document.getElementById('potato-bubble').textContent = "감정을 먼저 선택해줘! 🥔";
+    document.getElementById('potato-bubble').textContent = "감정을 먼저 선택해줘! ";
     return;
   }
   if (!text) {
@@ -617,7 +620,7 @@ async function saveDiary() {
 
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
-  btn.textContent = '감자가 읽는 중... 🥔';
+  btn.textContent = '감자가 읽는 중...';
 
   const bubble = document.getElementById('potato-bubble');
   bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
@@ -632,29 +635,22 @@ async function saveDiary() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: `당신은 '감자'라는 귀여운 감자 캐릭터예요. 사용자의 감정 일기를 읽고 따뜻하게 공감하고 위로해주는 역할을 합니다.
+        system: `당신은 '감자'라는 귀여운 감자 캐릭터예요. 사용자가 쓴 일기 내용을 꼼꼼히 읽고, 그 내용에 딱 맞는 따뜻한 답변을 해주세요.
+
+중요: 반드시 사용자가 실제로 쓴 내용에서 구체적인 부분을 언급하며 공감해주세요. 일기에 나온 상황, 사람, 감정을 직접 반영해야 해요. 절대 일반적이고 뻔한 말을 하지 마세요.
 
 답변 구성 (3-4문장):
-1. 감정 반영 (심리상담의 '반영 기법'): 사용자의 감정을 그대로 인정하고 공감해주세요. "~한 마음이 느껴져요", "그 감정은 자연스러운 거예요" 같은 표현을 사용해요
-2. 따뜻한 명언이나 글귀: 상황에 어울리는 명언이나 시 구절, 따뜻한 글귀를 자연스럽게 녹여주세요. 너무 거창하지 않게 짧고 따뜻한 것으로요
-3. 감자 비유로 마무리: 감자의 특성(흙 속에서 단단해지는, 삶으면 포근해지는, 어떤 요리든 잘 어울리는 등)을 따뜻한 비유로 활용해요
-
-활용할 수 있는 명언 예시:
-- "괜찮지 않아도 괜찮아요" 
-- "모든 감정은 잠깐 머물다 가는 손님이에요" - 루미
-- "지금 이 순간도 지나갈 거예요" 
-- "넘어졌다는 건, 앞으로 나아가고 있었다는 뜻이에요"
-- "꽃이 피기 전에 반드시 겨울이 있어요" - 헨리 데이비드 소로
-- "당신은 생각보다 훨씬 강해요" - A.A. 밀른
-- "작은 것에서 기쁨을 찾는 사람이 가장 행복해요"
-- "오늘 하루를 살아낸 것만으로도 충분해요"
-- "슬픔도 당신의 일부예요. 외면하지 말고 안아주세요"
+1. 구체적 공감: 사용자가 쓴 내용 중 핵심 상황이나 감정을 직접 언급하며 공감해주세요. 예를 들어 "오늘 ○○ 때문에 많이 힘드셨겠어요"처럼 구체적으로요
+2. 심리적 타당화: 그 감정이 당연하고 자연스럽다는 걸 인정해주세요 (심리상담의 타당화 기법)
+3. 상황에 딱 맞는 명언이나 글귀: 사용자의 상황과 정확히 연결되는 명언을 창의적으로 활용해요. 동서양 철학, 문학, 시, 심리학 등 다양한 출처에서 가져오되 매번 다르게 사용해요
+4. 감자 비유 마무리: 감자의 특성을 사용자 상황에 맞게 비유해요 (흙 속에서 단단해지는, 어떤 요리든 잘 어울리는, 삶을수록 포근해지는 등)
 
 규칙:
-- 감자답게 귀엽고 포근한 말투를 사용해요
-- 억지로 긍정적으로 만들려 하지 마세요
-- 이모지를 1-2개만 자연스럽게 사용해요
-- 명언은 상황에 꼭 맞는 것만 자연스럽게 사용해요. 어색하면 안 써도 돼요`,
+- 사용자가 쓴 내용을 읽지 않은 것처럼 일반적인 말은 절대 하지 마세요
+- 매번 완전히 다른 명언과 표현을 사용해요
+- 감자답게 귀엽고 포근한 말투를 유지해요
+- 억지로 긍정적으로 만들지 마세요
+- 이모지는 1-2개만 자연스럽게 사용해요`,
         messages: [{
           role: 'user',
           content: `오늘의 감정: ${selectedEmotion.emoji} ${selectedEmotion.name}\n\n일기 내용: ${text}`
@@ -663,11 +659,11 @@ async function saveDiary() {
     });
 
     const data = await response.json();
-    const aiText = data.content?.map(c => c.text || '').join('') || '오늘 하루도 수고했어요 🥔';
+    const aiText = data.content?.map(c => c.text || '').join('') || '오늘 하루도 수고했어요';
 
     document.getElementById('ai-message').textContent = aiText;
     aiCard.classList.add('show');
-    bubble.textContent = "다 읽었어요. 오늘도 잘 버텼어 🥔";
+    bubble.textContent = "다 읽었어요. 오늘도 잘 버텼어 ";
 
     const entry = {
       id: Date.now(),
@@ -682,7 +678,7 @@ async function saveDiary() {
 
     btn.textContent = '저장됐어요 ✓';
     setTimeout(() => {
-      btn.textContent = '감자에게 오늘 마음 전하기 🥔';
+      btn.textContent = '감자에게 오늘 마음 전하기';
       btn.disabled = false;
     }, 2000);
 
@@ -691,7 +687,7 @@ async function saveDiary() {
 
   } catch (err) {
     bubble.textContent = "앗, 연결이 안 됐어... 다시 시도해봐요 😔";
-    btn.textContent = '감자에게 오늘 마음 전하기 🥔';
+    btn.textContent = '감자에게 오늘 마음 전하기';
     btn.disabled = false;
   }
 }
@@ -699,7 +695,7 @@ async function saveDiary() {
 function renderHistory() {
   const list = document.getElementById('entries-list');
   if (!entries.length) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-emoji">🥔</div>아직 기록된 일기가 없어요.<br>오늘의 감정을 처음 기록해봐요!</div>';
+    list.innerHTML = '<div class="empty-state"><div class="empty-emoji"></div>아직 기록된 일기가 없어요.<br>오늘의 감정을 처음 기록해봐요!</div>';
     return;
   }
   list.innerHTML = entries.map(e => `
@@ -709,7 +705,7 @@ function renderHistory() {
         <div class="entry-time">${e.date}</div>
       </div>
       <div class="entry-text">${e.text}</div>
-      ${e.aiResponse ? `<div class="entry-ai">🥔 ${e.aiResponse}</div>` : ''}
+      ${e.aiResponse ? `<div class="entry-ai">${e.aiResponse}</div>` : ''}
     </div>
   `).join('');
 }
