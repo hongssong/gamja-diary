@@ -555,13 +555,53 @@ let entries = JSON.parse(localStorage.getItem('gamja-entries') || '[]');
 
 
 const potatoBubbles = {
-  excited:  "두근두근! 신나는 하루였구나 🎉 나도 같이 신나!",
-  happy:    "우와, 오늘 좋은 일이 있었구나! 나도 행복해 😊",
-  calm:     "포근한 하루였군요 😌 그런 날도 정말 소중해요",
-  sad:      "속상한 일이 있었구나... 곁에 있을게 💛",
-  tired:    "오늘 정말 수고했어요. 많이 지쳤겠다 😔",
-  default:  "오늘 하루 어땠어?"
+  excited: [
+    "두근두근! 신나는 하루였구나 🎉 나도 같이 신나!",
+    "와, 에너지가 느껴져! 오늘 뭔가 좋은 일이 있었지? 🎊",
+    "신나는 날엔 나도 덩달아 기분이 좋아져 🥳",
+    "오늘 하루 풀파워였구나! 그 에너지 대단해 ✨",
+    "설레는 하루였나봐! 그 기분 오래오래 이어지길 🌟"
+  ],
+  happy: [
+    "우와, 오늘 좋은 일이 있었구나! 나도 행복해 😊",
+    "행복한 날엔 감자도 같이 웃게 돼 🥔",
+    "오늘 하루 참 따뜻했겠다. 그 행복 잘 간직해줘 🌸",
+    "좋은 일이 있었구나! 그 기분 오늘 하루 내내 함께하길 💛",
+    "행복이 느껴져서 나도 기분이 좋아 🌼"
+  ],
+  calm: [
+    "포근한 하루였군요 😌 그런 날도 정말 소중해요",
+    "고요하고 잔잔한 하루... 그런 평화가 참 귀해 🌿",
+    "별일 없는 하루도 사실 얼마나 소중한지 몰라 🍃",
+    "평온한 날엔 나도 마음이 편안해져 😌",
+    "오늘처럼 조용하고 따뜻한 하루가 쌓여서 좋은 삶이 되는 거야 🌙"
+  ],
+  sad: [
+    "속상한 일이 있었구나... 곁에 있을게 💛",
+    "많이 힘들었지? 그 마음 다 괜찮아 🤍",
+    "슬픈 날엔 울어도 돼. 감자가 여기 있어 🥔",
+    "오늘 마음이 무거웠겠다... 수고했어, 정말로 🌧️",
+    "그 감정 느끼는 거 잘못된 거 아니야. 충분히 그럴 수 있어 💙"
+  ],
+  tired: [
+    "오늘 정말 수고했어요. 많이 지쳤겠다 😔",
+    "오늘 하루도 버텨줘서 고마워 🥔",
+    "지친 날엔 푹 쉬는 것도 용기야. 잘 쉬어 🌙",
+    "많이 힘들었지? 오늘 하루 진짜 고생했어 💤",
+    "몸도 마음도 다 지쳤겠다. 오늘은 그냥 쉬어도 돼 🍵"
+  ],
+  default: [
+    "오늘 하루 어땠어? 🥔",
+    "오늘도 수고했어! 어떤 하루였어? 😊",
+    "감자가 들어줄게, 오늘 이야기 해줘 🌿",
+    "오늘 기분은 어때? 🥔"
+  ]
 };
+
+function getRandomBubble(id) {
+  const list = potatoBubbles[id] || potatoBubbles.default;
+  return list[Math.floor(Math.random() * list.length)];
+}
 
 function updateDate() {
   const now = new Date();
@@ -580,7 +620,7 @@ function selectEmotion(name, emoji, id) {
   document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('active'));
   document.querySelector(`[data-id="${id}"]`).classList.add('active');
   updatePotatoExpression(id);
-  document.getElementById('potato-bubble').textContent = potatoBubbles[id];
+  document.getElementById('potato-bubble').textContent = getRandomBubble(id);
 }
 
 const potatoExpressions = {
@@ -659,11 +699,24 @@ async function saveDiary() {
     });
 
     const data = await response.json();
-    const aiText = data.content?.map(c => c.text || '').join('') || '오늘 하루도 수고했어요';
+    const fallbacks = [
+      '오늘 하루도 수고했어요 🥔',
+      '감자가 다 읽었어. 오늘도 잘했어 💛',
+      '오늘 마음 나눠줘서 고마워요 🌿',
+      '감자가 꼭 안아줄게요 🥔'
+    ];
+    const aiText = data.content?.map(c => c.text || '').join('') || fallbacks[Math.floor(Math.random() * fallbacks.length)];
 
     document.getElementById('ai-message').textContent = aiText;
     aiCard.classList.add('show');
-    bubble.textContent = "다 읽었어요. 오늘도 잘 버텼어 ";
+    const afterMessages = [
+      "다 읽었어요. 오늘도 잘 버텼어 🥔",
+      "감자가 다 들었어. 고마워요 💛",
+      "오늘 마음 나눠줘서 고마워 🌿",
+      "감자가 꼭 기억할게요 ✨",
+      "오늘도 잘했어, 정말로 🥔"
+    ];
+    bubble.textContent = afterMessages[Math.floor(Math.random() * afterMessages.length)];
 
     const entry = {
       id: Date.now(),
