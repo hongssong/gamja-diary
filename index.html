@@ -323,7 +323,7 @@
     resize: none;
     outline: none;
     transition: border-color 0.2s;
-    min-height: 120px;
+    min-height: 80px;
   }
   .diary-area:focus { border-color: var(--potato-brown); }
   .diary-area::placeholder { color: #C4A98A; }
@@ -693,8 +693,8 @@
       <!-- 일기 작성 -->
       <div class="section" style="padding-top:0">
         <div class="section-label">오늘 일기</div>
-        <textarea class="diary-area" id="diary-text" placeholder="오늘 있었던 일, 느꼈던 감정을 자유롭게 써봐요 ✍️" rows="5" maxlength="500" oninput="updateCharCount()"></textarea>
-        <div class="char-count"><span id="char-count">0</span>/500</div>
+        <textarea class="diary-area" id="diary-text" placeholder="오늘 있었던 일, 느꼈던 감정을 자유롭게 써봐요 ✍️" rows="3" maxlength="300" oninput="updateCharCount()"></textarea>
+        <div class="char-count"><span id="char-count">0</span>/300</div>
       </div>
 
       <!-- AI 위로 카드 -->
@@ -1070,7 +1070,9 @@ async function saveDiary() {
 
     btn.textContent = '저장됐어요 ✓';
     setTimeout(() => {
-      btn.textContent = '감자에게 오늘 마음 전하기';
+      btn.textContent = '↩ 처음으로';
+      btn.style.background = 'linear-gradient(135deg, #8B6E5A, #A0714F)';
+      btn.onclick = resetDiary;
       btn.disabled = false;
     }, 2000);
 
@@ -1084,6 +1086,43 @@ async function saveDiary() {
     // 연결 실패해도 여행 배너는 보여줘요
     showTravelBanner(selectedEmotion.id);
   }
+}
+
+function resetDiary() {
+  // 입력 초기화
+  document.getElementById('diary-text').value = '';
+  document.getElementById('char-count').textContent = '0';
+
+  // 감정 선택 초기화
+  selectedEmotion = null;
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('active'));
+  updatePotatoExpression('default');
+
+  // 말풍선 초기화
+  document.getElementById('potato-bubble').textContent = getRandomBubble('default');
+
+  // AI 카드 숨기기
+  document.getElementById('ai-card').classList.remove('show');
+
+  // 여행 배너 숨기기
+  document.getElementById('travel-banner').classList.remove('show');
+
+  // 배너 inner 스타일 초기화
+  const bannerInner = document.getElementById('travel-banner-inner');
+  bannerInner.style.backgroundImage = '';
+  bannerInner.style.padding = '';
+  const textArea = bannerInner.querySelector('.travel-banner-text');
+  if (textArea) textArea.style.display = 'flex';
+
+  // 버튼 원래대로
+  const btn = document.getElementById('save-btn');
+  btn.textContent = '감자에게 오늘 마음 전하기';
+  btn.style.background = '';
+  btn.onclick = saveDiary;
+  btn.disabled = false;
+
+  // 맨 위로 스크롤
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function renderHistory() {
